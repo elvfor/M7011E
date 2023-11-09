@@ -1,5 +1,5 @@
 """
-ASGI config for TaskManager project.
+ASGI config for TaskManager TaskManager.
 
 It exposes the ASGI callable as a module-level variable named ``application``.
 

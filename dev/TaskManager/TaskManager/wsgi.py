@@ -1,5 +1,5 @@
 """
-WSGI config for TaskManager project.
+WSGI config for TaskManager TaskManager.
 
 It exposes the WSGI callable as a module-level variable named ``application``.
 

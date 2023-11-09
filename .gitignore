@@ -2,4 +2,5 @@
 *.pyc
 
 # Ignore virtual environment directories
+dev/TaskManager/.env
 dev/TaskManager/.env2

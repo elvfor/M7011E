@@ -2,7 +2,7 @@
 # Ignore virtual environment directories
 dev/TaskManager/.env
 dev/TaskManager/.env2
-
+dev/TaskManager/TaskManager/.env
 # Django #
 *.log
 *.pot

@@ -4,6 +4,6 @@ from django.urls import include, path
 
 urlpatterns = [
     #path("TaskManagerApp/", include("TaskManagerApp.urls")),
-    path('api/v1/', admin.site.urls),
-    path('admin/', include('TaskManagerApp.urls')),
+    path('admin/', admin.site.urls),
+    path('api/v1/', include('TaskManagerApp.urls')),
 ]

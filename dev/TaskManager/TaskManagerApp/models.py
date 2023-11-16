@@ -8,15 +8,15 @@ from django.db import models
 class Organization(models.Model):
     organization_id = models.AutoField(primary_key=True)
     name = models.CharField(max_length=255, unique = True)
-    slug = models.SlugField(null = True)
+    slug = models.SlugField(null = True, unique=True)
 
     def save(self, *args, **kwargs):
-        if not self.slug:
+        if not self.slug or self.name != self.slug:
             self.slug = slugify(self.name)
         super().save(*args, **kwargs)
 
     def get_absolute_url(self):
-        return reverse("organization_name", kwargs={"slug": self.slug})
+        return reverse("organization-detail", kwargs={"slug": self.slug})
 
     def __str__(self):
         return self.name
@@ -41,8 +41,8 @@ class Project(models.Model):
             self.slug = slugify(self.project_name)
         super().save(*args, **kwargs)
 
-    def get_absolute_url(self):
-        return reverse("project_detail", kwargs={"slug": self.slug})
+    #def get_absolute_url(self):
+        #return reverse("project_detail", kwargs={"slug": self.slug})
 
 
     def __str__(self):

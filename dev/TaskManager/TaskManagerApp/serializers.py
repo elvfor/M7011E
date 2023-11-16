@@ -14,10 +14,15 @@ class GroupSerializer(serializers.HyperlinkedModelSerializer):
         model = Group
         fields = ['url', 'name']
 
+
 class OrganizationSerializer(serializers.HyperlinkedModelSerializer):
+
+    url = serializers.HyperlinkedIdentityField(view_name='organization-detail', lookup_field='slug')
+
     class Meta:
         model = Organization
-        fields = ['url', 'organization_id', 'name']
+        fields = ['url', 'organization_id', 'name' ]
+
 
 class UserProfileSerializer(serializers.HyperlinkedModelSerializer):
     class Meta:

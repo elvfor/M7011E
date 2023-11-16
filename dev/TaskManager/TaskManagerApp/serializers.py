@@ -1,5 +1,5 @@
 from django.contrib.auth.models import User, Group
-from models import Organization, Task, Project, UserProfile
+from .models import Organization, Task, Project, UserProfile
 from rest_framework import serializers
 
 

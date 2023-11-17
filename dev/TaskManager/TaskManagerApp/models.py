@@ -15,8 +15,8 @@ class Organization(models.Model):
     #        self.slug = slugify(self.name)
     #    super().save(*args, **kwargs)
 
-    def get_absolute_url(self):
-        return reverse("organization-detail", kwargs={"slug": self.slug})
+    #def get_absolute_url(self):
+    #    return reverse("organization-detail", kwargs={"slug": self.slug})
 
     def __str__(self):
         return self.name
@@ -38,8 +38,8 @@ class Project(models.Model):
     slug = models.SlugField(null=True, unique=True)
 
     #def save(self, *args, **kwargs):
-    #    if not self.slug or self.project_name != self.slug:
-    #        self.slug = slugify(self.project_name)
+    #    if not self.slug:
+    #        self.slug = slugify(self.name)
     #    super().save(*args, **kwargs)
 
     def get_absolute_url(self):
@@ -84,8 +84,8 @@ class Task(models.Model):
     #        self.slug = slugify(self.name)
     #    super().save(*args, **kwargs)
 
-    def get_absolute_url(self):
-        return reverse("task-detail", kwargs={"slug": self.slug})
+    #def get_absolute_url(self):
+    #    return reverse("task-detail", kwargs={"slug": self.slug})
 
     def __str__(self):
         return self.name

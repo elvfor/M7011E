@@ -51,12 +51,20 @@ class OrganizationDetail(generics.RetrieveUpdateDestroyAPIView):
 
 
 class ProjectList(generics.ListCreateAPIView):
-    queryset = Project.objects.all()
+    #queryset = Project.objects.all()
     serializer_class = ProjectSerializer
     #permission_classes = [permissions.IsAuthenticated]
 
+    def get_queryset(self):
+        organization = self.kwargs['organization']
+        return Project.objects.filter(organization__slug=organization)
+
+    def perform_create(self, serializer):
+        organization = Organization.objects.get(slug=self.kwargs['organization'])
+        serializer.save(organization=organization)
+
 class ProjectDetail(generics.RetrieveUpdateDestroyAPIView):
-    queryset = Project.objects.all()
+    #queryset = Project.objects.all()
     serializer_class = ProjectSerializer
     lookup_field = 'slug'
     #permission_classes = [permissions.IsAuthenticated]

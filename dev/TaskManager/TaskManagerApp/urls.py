@@ -17,6 +17,7 @@ urlpatterns = [
     path('userprofiles/', UserProfileList.as_view(), name='userprofile-list'),
     path('userprofiles/<int:pk>/', UserProfileDetail.as_view(), name='userprofile-detail'),
 
+
     path('organizations/<slug:organization>/projects/', ProjectList.as_view(), name='project-list'),
     path('organizations/<slug:organization>/projects/<slug:slug>/', ProjectDetail.as_view(), name='project-detail'),
 

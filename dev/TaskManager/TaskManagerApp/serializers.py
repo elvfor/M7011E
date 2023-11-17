@@ -32,11 +32,19 @@ class UserProfileSerializer(serializers.HyperlinkedModelSerializer):
 
 class ProjectSerializer(serializers.HyperlinkedModelSerializer):
 
-    url = serializers.HyperlinkedIdentityField(view_name='project-detail', lookup_field='slug')
+
+    url = serializers.HyperlinkedIdentityField(view_name='organization-detail', lookup_field='slug')
 
     class Meta:
         model = Project
         fields = ['url', 'id', 'name', 'users', 'slug']
+
+    def get_fields(self):
+        fields = super().get_fields()
+        # Add organization slug to the URL
+        fields['url'].view_name = 'project-detail'
+        fields['url'].lookup_field = 'slug'
+        return fields
 
 class TaskSerializer(serializers.HyperlinkedModelSerializer):
 

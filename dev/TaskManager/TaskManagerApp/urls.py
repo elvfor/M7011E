@@ -17,9 +17,9 @@ urlpatterns = [
     path('userprofiles/', UserProfileList.as_view(), name='userprofile-list'),
     path('userprofiles/<int:pk>/', UserProfileDetail.as_view(), name='userprofile-detail'),
 
-    path('projects/', ProjectList.as_view(), name='project-list'),
-    path('projects/<int:pk>/', ProjectDetail.as_view(), name='project-detail'),
+    path('organizations/<slug:organization>/projects/', ProjectList.as_view(), name='project-list'),
+    path('organizations/<slug:organization>/projects/<slug:slug>/', ProjectDetail.as_view(), name='project-detail'),
 
     path('tasks/', TaskList.as_view(), name='task-list'),
-    path('tasks/<int:pk>/', TaskDetail.as_view(), name='task-detail'),
+    path('organizations/<slug:organization>/projects/<slug:project>/tasks/<slug:slug>/', TaskDetail.as_view(), name='task-detail'),
 ]

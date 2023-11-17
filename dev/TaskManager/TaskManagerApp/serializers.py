@@ -18,10 +18,11 @@ class GroupSerializer(serializers.HyperlinkedModelSerializer):
 class OrganizationSerializer(serializers.HyperlinkedModelSerializer):
 
     url = serializers.HyperlinkedIdentityField(view_name='organization-detail', lookup_field='slug')
+    #organization_slug = serializers.SlugRelatedField(read_only=True, slug_field='slug')
 
     class Meta:
         model = Organization
-        fields = ['url', 'organization_id', 'name' ]
+        fields = ['url', 'id', 'name', 'slug']
 
 
 class UserProfileSerializer(serializers.HyperlinkedModelSerializer):
@@ -30,11 +31,17 @@ class UserProfileSerializer(serializers.HyperlinkedModelSerializer):
         fields = ['url', 'user', 'organization']
 
 class ProjectSerializer(serializers.HyperlinkedModelSerializer):
+
+    url = serializers.HyperlinkedIdentityField(view_name='project-detail', lookup_field='slug')
+
     class Meta:
         model = Project
-        fields = ['url', 'project_id', 'project_name', 'users']
+        fields = ['url', 'id', 'name', 'users', 'slug']
 
 class TaskSerializer(serializers.HyperlinkedModelSerializer):
+
+    url = serializers.HyperlinkedIdentityField(view_name='task-detail', lookup_field='slug')
+
     class Meta:
         model = Task
-        fields = ['url', 'task_id', 'name', 'description', 'status', 'estimated_time', 'label', 'project', 'users']
+        fields = ['url', 'id', 'name', 'description', 'status', 'estimated_time', 'label', 'project', 'users', 'slug']

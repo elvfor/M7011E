@@ -58,6 +58,7 @@ class ProjectList(generics.ListCreateAPIView):
 class ProjectDetail(generics.RetrieveUpdateDestroyAPIView):
     queryset = Project.objects.all()
     serializer_class = ProjectSerializer
+    lookup_field = 'slug'
     #permission_classes = [permissions.IsAuthenticated]
 
 class TaskList(generics.ListCreateAPIView):
@@ -68,4 +69,5 @@ class TaskList(generics.ListCreateAPIView):
 class TaskDetail(generics.RetrieveUpdateDestroyAPIView):
     queryset = Task.objects.all()
     serializer_class = ProjectSerializer
+    lookup_field = 'slug'
     #permission_classes = [permissions.IsAuthenticated]

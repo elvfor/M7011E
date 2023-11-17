@@ -2,6 +2,7 @@ from django.http import HttpResponse
 from .serializers import *
 from .models import *
 from rest_framework import generics, viewsets, permissions
+from django.shortcuts import get_object_or_404
 
 
 class UserList(generics.ListCreateAPIView):
@@ -51,15 +52,20 @@ class OrganizationDetail(generics.RetrieveUpdateDestroyAPIView):
 
 
 class ProjectList(generics.ListCreateAPIView):
-    queryset = Project.objects.all()
     serializer_class = ProjectSerializer
-    #permission_classes = [permissions.IsAuthenticated]
+    queryset = Project.objects.all()
+    #lookup_field = 'slug'
+
+    def get_queryset(self):
+        organization_slug = self.kwargs['organization']
+        return Project.objects.filter(organization__slug=organization_slug)
 
 class ProjectDetail(generics.RetrieveUpdateDestroyAPIView):
-    queryset = Project.objects.all()
     serializer_class = ProjectSerializer
     lookup_field = 'slug'
-    #permission_classes = [permissions.IsAuthenticated]
+    def get_queryset(self):
+        organization = self.kwargs['organization']
+        return Project.objects.filter(organization__slug=organization)
 
 class TaskList(generics.ListCreateAPIView):
     queryset = Task.objects.all()

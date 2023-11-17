@@ -32,11 +32,18 @@ class UserProfileSerializer(serializers.HyperlinkedModelSerializer):
 
 class ProjectSerializer(serializers.HyperlinkedModelSerializer):
 
-    url = serializers.HyperlinkedIdentityField(view_name='project-detail', lookup_field='slug')
+    organization = serializers.HyperlinkedIdentityField(view_name='organization-detail', lookup_field='slug')
+    organization_slug = serializers.SlugRelatedField(
+        read_only=True,
+        source='organization',
+        slug_field='slug'
+    )
 
     class Meta:
         model = Project
-        fields = ['url', 'id', 'name', 'users', 'slug']
+        fields = ('organization', 'id', 'name', 'users', 'slug', 'organization_slug')
+
+
 
 class TaskSerializer(serializers.HyperlinkedModelSerializer):
 

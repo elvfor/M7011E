@@ -20,6 +20,7 @@ urlpatterns = [
     path('organizations/<slug:organization>/projects/', ProjectList.as_view(), name='project-list'),
     path('organizations/<slug:organization>/projects/<slug:slug>/', ProjectDetail.as_view(), name='project-detail'),
 
-    path('tasks/', TaskList.as_view(), name='task-list'),
+    path('organizations/<slug:organization>/projects/<slug:project>/tasks/', TaskList.as_view(), name='task-list'),
     path('organizations/<slug:organization>/projects/<slug:project>/tasks/<slug:slug>/', TaskDetail.as_view(), name='task-detail'),
+
 ]

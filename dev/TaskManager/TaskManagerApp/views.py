@@ -60,6 +60,10 @@ class ProjectList(generics.ListCreateAPIView):
         organization_slug = self.kwargs['organization']
         return Project.objects.filter(organization__slug=organization_slug)
 
+    def perform_create(self, serializer):
+        organization = Organization.objects.get(slug=self.kwargs['organization'])
+        serializer.save(organization=organization)
+
 class ProjectDetail(generics.RetrieveUpdateDestroyAPIView):
     serializer_class = ProjectSerializer
     lookup_field = 'slug'
@@ -68,12 +72,22 @@ class ProjectDetail(generics.RetrieveUpdateDestroyAPIView):
         return Project.objects.filter(organization__slug=organization)
 
 class TaskList(generics.ListCreateAPIView):
-    queryset = Task.objects.all()
     serializer_class = TaskSerializer
-    #permission_classes = [permissions.IsAuthenticated]
+    #lookup_field = 'slug'
+
+    def get_queryset(self):
+        project_slug = self.kwargs['project']
+        return Task.objects.filter(project__slug=project_slug)
+
+    def perform_create(self, serializer):
+        project = Project.objects.get(slug=self.kwargs['project'])
+        serializer.save(project=project)
 
 class TaskDetail(generics.RetrieveUpdateDestroyAPIView):
-    queryset = Task.objects.all()
-    serializer_class = ProjectSerializer
+    serializer_class = TaskSerializer
     lookup_field = 'slug'
-    #permission_classes = [permissions.IsAuthenticated]
+
+    def get_queryset(self):
+        project = self.kwargs['project']
+        return Task.objects.filter(project__slug=project)
+

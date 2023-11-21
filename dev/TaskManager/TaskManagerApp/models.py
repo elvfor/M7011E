@@ -15,12 +15,8 @@ class Organization(models.Model):
     #        self.slug = slugify(self.name)
     #    super().save(*args, **kwargs)
 
-    def get_absolute_url(self):
-        return reverse("organization-detail", kwargs={"slug": self.slug})
-
     def __str__(self):
         return self.name
-
 
 class UserProfile(models.Model):
     user = models.OneToOneField(User, on_delete=models.CASCADE)
@@ -36,14 +32,11 @@ class Project(models.Model):
     users = models.ManyToManyField(User)
     organization = models.ForeignKey(Organization, on_delete=models.CASCADE, null = True)
     slug = models.SlugField(null=True, unique=True)
-
+    objects = models.Manager()
     #def save(self, *args, **kwargs):
     #    if not self.slug or self.project_name != self.slug:
     #        self.slug = slugify(self.project_name)
     #    super().save(*args, **kwargs)
-
-    def get_absolute_url(self):
-        return reverse("project-detail", kwargs={"slug": self.slug})
 
     def __str__(self):
         return self.name
@@ -56,6 +49,8 @@ class Task(models.Model):
     description = models.TextField()
     estimated_time = models.DecimalField(max_digits=5, decimal_places=2)
     project = models.ForeignKey(Project, on_delete=models.CASCADE)
+
+    objects = models.Manager()
 
     STATUS_CHOICES = [
         ('Backlog', 'Backlog'),
@@ -78,13 +73,12 @@ class Task(models.Model):
     users = models.ManyToManyField(User)
     slug = models.SlugField(null=True, unique=True)
 
+    objects = models.Manager()
+
     #def save(self, *args, **kwargs):
     #    if not self.slug or self.name != self.slug:
     #        self.slug = slugify(self.name)
     #    super().save(*args, **kwargs)
-
-    def get_absolute_url(self):
-        return reverse("task-detail", kwargs={"slug": self.slug})
 
     def __str__(self):
         return self.name

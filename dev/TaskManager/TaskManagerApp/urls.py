@@ -11,16 +11,16 @@ urlpatterns = [
     path('groups/', GroupList.as_view(), name='group-list'),
     path('groups/<int:pk>/', GroupDetail.as_view(), name='group-detail'),
 
-    path('organizations/', OrganizationList.as_view(), name='organization-list'),
-    path('organizations/<slug:slug>/', OrganizationDetail.as_view(), name='organization-detail'),
+    path('organizations/', OrganizationList.as_view(), name='organization_list'),
+    path('organizations/<slug:slug>/', OrganizationDetail.as_view(), name='organization_detail'),
 
     path('userprofiles/', UserProfileList.as_view(), name='userprofile-list'),
     path('userprofiles/<int:pk>/', UserProfileDetail.as_view(), name='userprofile-detail'),
 
-    path('organizations/<slug:organization>/projects/', ProjectList.as_view(), name='project-list'),
-    path('organizations/<slug:organization>/projects/<slug:slug>/', ProjectDetail.as_view(), name='project-detail'),
+    path('organizations/<slug:organization>/projects/', ProjectList.as_view(), name='project_list'),
+    path('projects/<slug:slug>/', ProjectDetail.as_view(), name='project_detail'),
 
-    path('organizations/<slug:organization>/projects/<slug:project>/tasks/', TaskList.as_view(), name='task-list'),
-    path('organizations/<slug:organization>/projects/<slug:project>/tasks/<slug:slug>/', TaskDetail.as_view(), name='task-detail'),
+    path('projects/<slug:project>/tasks/', TaskList.as_view(), name='task_list'),
+    path('tasks/<slug:slug>/', TaskDetail.as_view(), name='task_detail'),
 
 ]

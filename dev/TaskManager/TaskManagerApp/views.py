@@ -1,6 +1,6 @@
 from django.http import HttpResponse
 from .serializers import *
-from .models import *
+from .models import Organization, Project, Task, User, UserProfile
 from rest_framework import generics, viewsets, permissions
 from django.shortcuts import get_object_or_404
 
@@ -53,8 +53,6 @@ class OrganizationDetail(generics.RetrieveUpdateDestroyAPIView):
 
 class ProjectList(generics.ListCreateAPIView):
     serializer_class = ProjectSerializer
-    queryset = Project.objects.all()
-    #lookup_field = 'slug'
 
     def get_queryset(self):
         organization_slug = self.kwargs['organization']

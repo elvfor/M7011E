@@ -18,12 +18,9 @@ class GroupSerializer(serializers.HyperlinkedModelSerializer):
 
 class OrganizationSerializer(serializers.HyperlinkedModelSerializer):
 
-    url = serializers.HyperlinkedIdentityField(view_name='organization-detail', lookup_field='slug')
-    #organization_slug = serializers.SlugRelatedField(read_only=True, slug_field='slug')
-
     class Meta:
         model = Organization
-        fields = ['url', 'id', 'name', 'slug']
+        fields = ['id', 'name', 'slug']
 
 
 class UserProfileSerializer(serializers.HyperlinkedModelSerializer):
@@ -32,25 +29,34 @@ class UserProfileSerializer(serializers.HyperlinkedModelSerializer):
         fields = ['url', 'user', 'organization']
 
 class ProjectSerializer(serializers.HyperlinkedModelSerializer):
-
-    organization = serializers.HyperlinkedIdentityField(
-        view_name='organization-detail',
-        read_only=True,
-        lookup_field='slug')
     organization_slug = serializers.SlugRelatedField(
         read_only=True,
         source='organization',
         slug_field='slug'
     )
 
+    organization = serializers.HyperlinkedIdentityField(
+        view_name='organization_detail',
+        read_only=True,
+        lookup_field='slug')
+
+    organization = serializers.CharField(source='get_organization_url', read_only=True)
+
     class Meta:
         model = Project
-        fields = ('organization', 'id', 'name', 'users', 'slug', 'organization_slug')
+        fields = ('organization_slug', 'organization', 'id', 'name', 'users', 'slug')
+        read_only_fields = ['organization', ]
 
-
+    def get_organization(self, obj):
+        request = self.context.get('request')
+        if request:
+            base_url = request.build_absolute_uri('/')  # Get the base URL
+            organization_url = reverse('organization_detail', kwargs={'slug': obj.organization.slug})
+            return f"{base_url.rstrip('/')}{organization_url}"
+        return None
 
 class TaskSerializer(serializers.HyperlinkedModelSerializer):
-    project = serializers.HyperlinkedIdentityField(view_name='organization-detail', lookup_field='slug')
+    project = serializers.HyperlinkedIdentityField(view_name='organization_detail', lookup_field='slug')
     project_slug = serializers.SlugRelatedField(
         read_only=True,
         source='project',

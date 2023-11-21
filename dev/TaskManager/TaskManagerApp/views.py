@@ -73,21 +73,21 @@ class ProjectDetail(generics.RetrieveUpdateDestroyAPIView):
 
 class TaskList(generics.ListCreateAPIView):
     serializer_class = TaskSerializer
-    #lookup_field = 'slug'
 
     def get_queryset(self):
+        organization_slug = self.kwargs['organization']
         project_slug = self.kwargs['project']
-        return Task.objects.filter(project__slug=project_slug)
+        return Task.objects.filter(project__organization__slug=organization_slug, project__slug=project_slug)
 
     def perform_create(self, serializer):
-        project = Project.objects.get(slug=self.kwargs['project'])
+        organization = Organization.objects.get(slug=self.kwargs['organization'])
+        project = Project.objects.get(organization=organization, slug=self.kwargs['project'])
         serializer.save(project=project)
 
 class TaskDetail(generics.RetrieveUpdateDestroyAPIView):
     serializer_class = TaskSerializer
     lookup_field = 'slug'
-
     def get_queryset(self):
-        project = self.kwargs['project']
-        return Task.objects.filter(project__slug=project)
-
+        organization_slug = self.kwargs['organization']
+        project_slug = self.kwargs['project']
+        return Task.objects.filter(project__organization__slug=organization_slug, project__slug=project_slug)

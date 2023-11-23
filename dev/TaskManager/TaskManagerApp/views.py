@@ -53,7 +53,8 @@ class OrganizationDetail(generics.RetrieveUpdateDestroyAPIView):
 
 class ProjectList(generics.ListCreateAPIView):
     serializer_class = ProjectSerializer
-    queryset = Project.objects.all()
+    #queryset = Project.objects.all()
+
     #lookup_field = 'slug'
 
     def get_queryset(self):

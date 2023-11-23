@@ -29,6 +29,7 @@ class UserProfileSerializer(serializers.HyperlinkedModelSerializer):
         fields = ['url', 'user', 'organization']
 
 class ProjectSerializer(serializers.HyperlinkedModelSerializer):
+
     organization_slug = serializers.SlugRelatedField(
         read_only=True,
         source='organization',
@@ -40,24 +41,28 @@ class ProjectSerializer(serializers.HyperlinkedModelSerializer):
         read_only=True,
         lookup_field='slug')
 
-    #organization = serializers.SerializerMethodField()
 
     class Meta:
         model = Project
         fields = ('organization_slug', 'organization', 'id', 'name', 'users', 'slug')
-        read_only_fields = ['organization', ]
+        read_only_fields = ['organization', 'organization_slug', ]
 
-    #def get_organization(self, obj):
-    #    return reverse('organization_detail', kwargs={'slug': obj.organization.slug})
 
 class TaskSerializer(serializers.HyperlinkedModelSerializer):
-    project = serializers.HyperlinkedIdentityField(view_name='organization_detail', lookup_field='slug')
+
     project_slug = serializers.SlugRelatedField(
         read_only=True,
         source='project',
         slug_field='slug'
     )
 
+    project = serializers.HyperlinkedRelatedField(
+        view_name='project_detail',
+        read_only=True,
+        lookup_field='slug')
+
     class Meta:
         model = Task
-        fields = ['id', 'name', 'description', 'status', 'estimated_time', 'label', 'project', 'users', 'slug', 'project_slug']
+        fields = ['id', 'name', 'description', 'status', 'estimated_time', 'label',
+                  'project', 'users', 'slug', 'project_slug']
+        read_only_fields = ['project', 'project_slug', ]

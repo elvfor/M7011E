@@ -37,7 +37,7 @@ class ProjectSerializer(serializers.HyperlinkedModelSerializer):
     )
 
     organization = serializers.HyperlinkedRelatedField(
-        view_name='organization_detail',
+        view_name='organization-detail',
         read_only=True,
         lookup_field='slug')
 
@@ -57,7 +57,7 @@ class TaskSerializer(serializers.HyperlinkedModelSerializer):
     )
 
     project = serializers.HyperlinkedRelatedField(
-        view_name='project_detail',
+        view_name='project-detail',
         read_only=True,
         lookup_field='slug')
 

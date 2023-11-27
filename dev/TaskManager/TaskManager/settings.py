@@ -32,6 +32,7 @@ INSTALLED_APPS = [
     'organization',
     'project',
     'task',
+    'user',
     'rest_framework',
 ]
 

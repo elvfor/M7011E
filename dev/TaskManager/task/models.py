@@ -2,7 +2,7 @@ from django.db import models
 
 # Create your models here.
 from django.db import models
-from dev.TaskManager.project.models import Project
+from project.models import Project
 from django.contrib.auth.models import User
 
 class Task(models.Model):

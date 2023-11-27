@@ -9,4 +9,5 @@ urlpatterns = [
     path('api/v1/', include('organization.urls')),
     path('api/v1/', include('project.urls')),
     path('api/v1/', include('task.urls')),
+    path('api/v1/', include('user.urls')),
 ]

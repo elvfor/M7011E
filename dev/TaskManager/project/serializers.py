@@ -15,6 +15,7 @@ class ProjectSerializer(serializers.HyperlinkedModelSerializer):
         read_only=True,
         lookup_field='slug')
 
+    users = serializers.PrimaryKeyRelatedField(many=True, queryset=User.objects.all())
 
     class Meta:
         model = Project

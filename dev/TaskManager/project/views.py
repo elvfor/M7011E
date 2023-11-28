@@ -2,6 +2,7 @@ from django.http import HttpResponse
 from .serializers import *
 from .models import Project
 from rest_framework import generics, viewsets, permissions
+from organization.models import Organization
 from django.shortcuts import get_object_or_404
 class ProjectList(generics.ListCreateAPIView):
     serializer_class = ProjectSerializer

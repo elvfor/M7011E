@@ -1,13 +1,8 @@
-from django.shortcuts import render
-from django.http import HttpResponse
+from django.http import Http404
 from rest_framework.permissions import IsAdminUser
-
 from .serializers import *
 from .models import Organization
-from rest_framework import generics, viewsets, authentication, permissions
-from django.shortcuts import get_object_or_404
-
-#from .. import organization
+from rest_framework import generics, authentication, permissions
 
 
 class IsPartOfOrg(permissions.BasePermission):
@@ -19,9 +14,11 @@ class IsPartOfOrg(permissions.BasePermission):
         try:
             organization = Organization.objects.get(slug=organization_slug)
         except Organization.DoesNotExist:
-            return False
+            raise Http404
 
         return request.user in organization.users.all()
+
+
 class IsOrgLeader(permissions.BasePermission):
     message = {'detail': 'You must be an organization leader to do this.'}
 
@@ -31,15 +28,15 @@ class IsOrgLeader(permissions.BasePermission):
 
 
 class OrganizationList(generics.ListCreateAPIView):
-    #queryset = Organization.objects.all()
     serializer_class = OrganizationSerializer
 
     authentication_classes = [authentication.TokenAuthentication]
-    permission_classes = [permissions.IsAuthenticated, (IsOrgLeader | IsAdminUser )]
+    permission_classes = [permissions.IsAuthenticated, (IsOrgLeader | IsAdminUser)]
 
     def get_queryset(self):
         user = self.request.user
         return Organization.objects.filter(users=user)
+
 
 class OrganizationDetail(generics.RetrieveUpdateDestroyAPIView):
     authentication_classes = [authentication.TokenAuthentication]

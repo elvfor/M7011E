@@ -14,16 +14,31 @@ class IsUserInProjOrg(permissions.BasePermission):
 
     def has_permission(self, request, view):
         project_slug = view.kwargs['slug']
-
+        print("Test has permission")
         try:
             project = Project.objects.get(slug=project_slug)
             organization = project.organization
         except Project.DoesNotExist:
-            return False
+            print("project not found")
+            raise Http404
         except Organization.DoesNotExist:
+            print("org not found")
             raise Http404
 
         return request.user in organization.users.all()
+
+class IsUserInProj(permissions.BasePermission):
+    message = {'detail': 'Can not view task for a project you are not in.'}
+
+    def has_permission(self, request, view):
+        task_slug = view.kwargs['slug']
+        try:
+            task = Task.objects.get(slug=task_slug)
+            project = task.project
+        except Task.DoesNotExist:
+            raise Http404
+
+        return request.user in project.users.all()
 
 class IsWorker(permissions.BasePermission):
     message = {'detail': 'You must be a worker to do this.'}
@@ -56,4 +71,6 @@ class TaskDetail(generics.RetrieveUpdateDestroyAPIView):
     lookup_field = 'slug'
     queryset = Task.objects.all()
     authentication_classes = [authentication.TokenAuthentication]
-    permission_classes = [permissions.IsAuthenticated, (IsWorker | IsProjLeader | IsOrgLeader), IsUserInProjOrg]
+    permission_classes = [permissions.IsAuthenticated,
+                          (IsWorker | IsProjLeader | IsOrgLeader), (IsUserInProj | (IsUserInProjOrg, IsOrgLeader))]
+######Fel här!!!!!!!!!

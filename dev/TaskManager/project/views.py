@@ -10,7 +10,7 @@ class IsPartOfProj(permissions.BasePermission):
     sage = {'detail': 'You must be part of this Project.'}
 
     def has_permission(self, request, view):
-        project_slug = view.kwargs['project']  # Assuming 'project' is the parameter name in your URL
+        project_slug = view.kwargs['slug']  # Assuming 'project' is the parameter name in your URL
 
         try:
             project = Project.objects.get(slug=project_slug)
@@ -35,7 +35,7 @@ class ProjectList(generics.ListCreateAPIView):
         return Project.objects.filter(users=user)
 
     def perform_create(self, serializer):
-        organization = Organization.objects.get(slug=self.kwargs['organization'])
+        organization = Organization.objects.get(slug=self.kwargs['slug'])
         serializer.save(organization=organization)
 
 class ProjectDetail(generics.RetrieveUpdateDestroyAPIView):

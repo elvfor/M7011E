@@ -39,17 +39,16 @@ class TaskList(generics.ListCreateAPIView):
     permission_classes = [permissions.IsAuthenticated, (IsWorker | IsProjLeader | IsOrgLeader), IsUserInProjOrg]
 
     def get_queryset(self):
-        #organization_slug = self.kwargs['organization']
         project_slug = self.kwargs['slug']
         return Task.objects.filter(project__slug=project_slug)
 
     def perform_create(self, serializer):
-        project = Project.objects.get(slug=self.kwargs['project'])
+        project = Project.objects.get(slug=self.kwargs['slug'])
         serializer.save(project=project)
 
-#    def get_queryset(self):
-#        worker = self.request.user
-#        return worker.tasks.all()
+    #def get_queryset(self):
+    #    user = self.request.user
+    #    return Task.objects.filter(users=user)
 
 
 class TaskDetail(generics.RetrieveUpdateDestroyAPIView):

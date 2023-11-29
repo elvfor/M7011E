@@ -5,6 +5,5 @@ urlpatterns = [
 
     path('organizations/<slug:slug>/projects/', ProjectList.as_view(), name='project-list'),
     path('projects/<slug:slug>/', ProjectDetail.as_view(), name='project-detail'),
-    path('projects/<slug:slug>/', ProjectDetail.as_view(), name='project-detail'),
 
 ]

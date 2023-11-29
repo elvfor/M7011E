@@ -39,5 +39,5 @@ class Task(models.Model):
     #        self.slug = slugify(self.name)
     #    super().save(args, **kwargs)
 
-    def str(self):
+    def __str__(self):
         return self.name

@@ -15,6 +15,8 @@ class TaskSerializer(serializers.HyperlinkedModelSerializer):
         read_only=True,
         lookup_field='slug')
 
+    users = serializers.PrimaryKeyRelatedField(many=True, queryset=User.objects.all())
+
     class Meta:
         model = Task
         fields = ['id', 'name', 'description', 'status', 'estimated_time', 'label',

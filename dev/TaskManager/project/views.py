@@ -28,8 +28,8 @@ class IsProjLeader(permissions.BasePermission):
 class ProjectList(generics.ListCreateAPIView):
     serializer_class = ProjectSerializer
 
-    authentication_projects = [authentication.TokenAuthentication]
-    permission_projects = [permissions.IsAuthenticated, IsOrgLeader]
+    authentication_classes = [authentication.TokenAuthentication]
+    permission_classes = [permissions.IsAuthenticated, IsOrgLeader, IsPartOfOrg]
     def get_queryset(self):
         user = self.request.user
         return Project.objects.filter(users=user)
@@ -43,5 +43,5 @@ class ProjectDetail(generics.RetrieveUpdateDestroyAPIView):
     lookup_field = 'slug'
     queryset = Project.objects.all()
     authentication_classes = [authentication.TokenAuthentication]
-    permission_classes = [permissions.IsAuthenticated, (IsProjLeader | IsOrgLeader)]
+    permission_classes = [permissions.IsAuthenticated, (IsProjLeader | IsOrgLeader), IsPartOfOrg]
     #permission_classes = [permissions.IsAuthenticated, (IsProjLeader | IsOrgLeader | IsWorker)]

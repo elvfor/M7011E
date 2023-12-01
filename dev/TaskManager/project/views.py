@@ -6,14 +6,24 @@ from organization.models import Organization
 from organization.views import IsOrgLeader, IsPartOfOrg
 
 
+from rest_framework import permissions
+
 class SafePermissions(permissions.BasePermission):
     message = {'detail': 'You do not have permission to do this.'}
 
     def has_permission(self, request, view):
-        return self.is_safe_method(request)
+        if self.is_safe_method(request):
+            return True
+        else:
+            return self.is_proj_leader(request, view)
+        return False
 
     def is_safe_method(self, request):
         return request.method in permissions.SAFE_METHODS
+
+    def is_proj_leader(self, request, view):
+        group_name = "Project Leader"
+        return request.user.groups.filter(name=group_name).exists()
 
 
 class IsWorker(permissions.BasePermission):

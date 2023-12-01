@@ -31,7 +31,7 @@ class OrganizationList(generics.ListCreateAPIView):
     serializer_class = OrganizationSerializer
 
     authentication_classes = [authentication.TokenAuthentication]
-    permission_classes = [permissions.IsAuthenticated, (IsOrgLeader | IsAdminUser)]
+    permission_classes = [permissions.IsAuthenticated, IsAdminUser]
 
     def get_queryset(self):
         user = self.request.user

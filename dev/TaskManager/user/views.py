@@ -1,11 +1,3 @@
-from django.shortcuts import render
-
-# Create your views here.
-from django.http import HttpResponse
-from .serializers import *
-from rest_framework import generics, viewsets, permissions
-from django.shortcuts import get_object_or_404
-
 from rest_framework import generics, authentication, permissions
 from rest_framework.authtoken.views import ObtainAuthToken
 from rest_framework.settings import api_settings

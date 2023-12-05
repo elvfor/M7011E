@@ -5,8 +5,8 @@ from rest_framework import generics, authentication, permissions
 from organization.models import Organization
 from organization.views import IsOrgLeader, IsPartOfOrg
 
-
 from rest_framework import permissions
+
 
 class SafePermissions(permissions.BasePermission):
     message = {'detail': 'You do not have permission to do this.'}
@@ -62,7 +62,7 @@ class ProjectList(generics.ListCreateAPIView):
     authentication_classes = [authentication.TokenAuthentication]
     permission_classes = [permissions.IsAuthenticated, (IsOrgLeader | IsWorker | IsProjLeader), IsPartOfOrg]
 
-    #def get_queryset(self):
+    # def get_queryset(self):
     #    organization = Organization.objects.get(slug=self.kwargs['slug'])
     #    return Project.objects.filter(organization=organization)
     def get_queryset(self):

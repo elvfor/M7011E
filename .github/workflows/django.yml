@@ -27,11 +27,12 @@ jobs:
           pip install -r requirements.txt
       - name: Set up Environment Variables
         run: |
-          echo "DB_NAME=${{ secrets.DB_NAME }}" >> .env
-          echo "DB_USER=${{ secrets.DB_USER }}" >> .env
-          echo "DB_NAME=${{ secrets.DB_PASS }}" >> .env
-          echo "DB_USER=${{ secrets.DB_HOST }}" >> .env
-          echo "DB_PORT=${{ secrets.DB_HOST }}" >> .env
+          cd dev/TaskManager/TaskManager
+          echo "DB_NAME=${{ DB_NAME=your_db_name }}" >> .env
+          echo "DB_USER=${{ DB_USER=your_user_name }}" >> .env
+          echo "DB_NAME=${{ DB_PASS=your_pass }}" >> .env
+          echo "DB_USER=${{ DB_HOST=host }}" >> .env
+          echo "DB_USER=${{ DB_PORT=port }}" >> .env
       - name: Run Tests
         run: |
           cd dev/TaskManager

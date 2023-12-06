@@ -25,7 +25,6 @@ class OrganizationDetailTest(APITestCase):
         # Make a GET request to retrieve the organization detail
         response = self.client.get(self.url)
 
-        # Check if the response status code is 200 OK
         self.assertEqual(response.status_code, status.HTTP_403_FORBIDDEN)
 
         # Check if the serialized data in the response matches the expected data

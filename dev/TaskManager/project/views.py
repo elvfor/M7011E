@@ -60,7 +60,8 @@ class ProjectList(generics.ListCreateAPIView):
     serializer_class = ProjectSerializer
 
     authentication_classes = [authentication.TokenAuthentication]
-    permission_classes = [permissions.IsAuthenticated, (IsOrgLeader | IsWorker | IsProjLeader), IsPartOfOrg]
+    permission_classes = [permissions.IsAuthenticated, (IsOrgLeader | IsWorker | IsProjLeader), IsPartOfOrg,
+                          SafePermissions]
 
     # def get_queryset(self):
     #    organization = Organization.objects.get(slug=self.kwargs['slug'])

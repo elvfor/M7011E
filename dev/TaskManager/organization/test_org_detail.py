@@ -79,3 +79,12 @@ class OrganizationDetailTest(APITestCase):
         self.assertEqual(self.organization.name, payload['name'])
         self.assertEqual(self.organization.slug, payload['slug'])
         self.assertEqual(response.status_code, status.HTTP_200_OK)
+
+    def test_delete_organization(self):
+        """Test deleting the organization for authenticated organization leader"""
+        self.client.force_authenticate(user=self.user_org_leader)
+
+        response = self.client.delete(self.url)
+
+        self.assertEqual(response.status_code, status.HTTP_204_NO_CONTENT)
+        self.assertEqual(Organization.objects.count(), 0)

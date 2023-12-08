@@ -32,10 +32,6 @@ class OrganizationListTest(APITestCase):
         self.organization.users.add(self.user_org_leader)
         self.url = f'/api/v1/organizations/'
 
-        # Task
-        # self.task = Task.objects.create(name='',
-        #                                                slug='tasks')
-
     def test_retrieve_org_list_worker(self):
         """Test that a Worker can not get organization list"""
         self.client.force_authenticate(user=self.user_worker)
@@ -53,6 +49,21 @@ class OrganizationListTest(APITestCase):
         self.client.force_authenticate(user=self.superuser)
         response = self.client.get(self.url)
         self.assertEqual(response.status_code, status.HTTP_200_OK)
+
+    def test_create_org_superuser(self):
+        """Test that a Superuser can create organization"""
+        self.client.force_authenticate(user=self.superuser)
+
+        payload = {
+            'name': 'Newer Organization',
+            'slug': 'newer-organization',
+        }
+
+        self.assertEqual(Organization.objects.filter(name='Newer Organization').count(), 0)
+        response = self.client.post(self.url, payload)
+        self.assertEqual(response.status_code, status.HTTP_201_CREATED)
+        self.assertEqual(Organization.objects.filter(name='Newer Organization').count(), 1)
+        self.assertEqual(Organization.objects.filter(name='Newer Organization').first().name, 'Newer Organization')
 
     def test_retrieve_org_list_superuser_not_auth(self):
         """Test that an unauthorized user can not get organization list"""

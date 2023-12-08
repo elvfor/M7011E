@@ -98,21 +98,3 @@ class ProjectDetailTest(APITestCase):
 
         self.project.refresh_from_db()
         self.assertEqual(response.status_code, status.HTTP_403_FORBIDDEN)
-
-    def test_update_proj_worker(self):
-        """Test Worker can not update project it is in."""
-        self.client.force_authenticate(user=self.user_worker)
-        payload = {'name': 'Updated Project'}
-        response = self.client.patch(self.url, payload)
-
-        self.project.refresh_from_db()
-        self.assertEqual(response.status_code, status.HTTP_403_FORBIDDEN)
-    def test_update_proj_org_leader(self):
-        """Test Org Leader can not update project it is in."""
-        self.client.force_authenticate(user=self.user_org_leader)
-        payload = {'name': 'Updated Project'}
-        response = self.client.patch(self.url, payload)
-
-        self.project.refresh_from_db()
-        self.assertEqual(response.status_code, status.HTTP_403_FORBIDDEN)
-

@@ -4,6 +4,7 @@ from .models import Project
 from rest_framework import generics, authentication, permissions
 from organization.models import Organization
 from organization.views import IsOrgLeader, IsPartOfOrg
+from rest_framework.permissions import IsAdminUser
 
 from rest_framework import permissions
 
@@ -57,11 +58,12 @@ class IsProjLeader(permissions.BasePermission):
 
 
 class ProjectList(generics.ListCreateAPIView):
+    """Manage Projects in entered Organization."""
     serializer_class = ProjectSerializer
 
     authentication_classes = [authentication.TokenAuthentication]
-    permission_classes = [permissions.IsAuthenticated, (IsOrgLeader | IsWorker | IsProjLeader), IsPartOfOrg,
-                          SafePermissions]
+    permission_classes = [permissions.IsAuthenticated, (IsOrgLeader | IsWorker | IsProjLeader | IsAdminUser),
+                          (IsPartOfOrg | IsAdminUser), (SafePermissions | IsAdminUser)]
 
     # def get_queryset(self):
     #    organization = Organization.objects.get(slug=self.kwargs['slug'])
@@ -79,13 +81,17 @@ class ProjectList(generics.ListCreateAPIView):
             return Project.objects.filter(users=self.request.user, organization=organization)
 
     def perform_create(self, serializer):
+        serializer.is_valid(raise_exception=True)
         organization = Organization.objects.get(slug=self.kwargs['slug'])
         serializer.save(organization=organization)
 
 
+
 class ProjectDetail(generics.RetrieveUpdateDestroyAPIView):
+    """Manage entered Project and view its Tasks."""
     serializer_class = ProjectSerializer
     lookup_field = 'slug'
     queryset = Project.objects.all()
     authentication_classes = [authentication.TokenAuthentication]
-    permission_classes = [permissions.IsAuthenticated, (IsWorker | IsProjLeader), SafePermissions, IsPartOfProj]
+    permission_classes = [permissions.IsAuthenticated, (IsWorker | IsProjLeader | IsAdminUser),
+                          (SafePermissions | IsAdminUser), (IsPartOfProj | IsAdminUser)]

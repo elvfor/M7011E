@@ -1,6 +1,8 @@
 from django.contrib.auth.models import User, Group
 from .models import Project
 from rest_framework import serializers
+from organization.models import Organization
+
 from django.urls import reverse
 class ProjectSerializer(serializers.HyperlinkedModelSerializer):
 
@@ -21,3 +23,32 @@ class ProjectSerializer(serializers.HyperlinkedModelSerializer):
         model = Project
         fields = ('organization_slug', 'organization', 'id', 'name', 'users', 'slug')
         read_only_fields = ['organization', 'organization_slug', ]
+
+    def validate_users(self, value):
+        """
+        Validate that users belong to the same organization as the project.
+        """
+        instance = self.instance
+        project_organization = None
+
+        # Check if there is an existing instance (update scenario)
+        if instance is not None:
+            project_organization = instance.organization
+
+        # If organization is provided in the URL, use it for validation
+        elif 'slug' in self.context['view'].kwargs:
+            organization_slug = self.context['view'].kwargs['slug']
+            try:
+                project_organization = Organization.objects.get(slug=organization_slug)
+            except Organization.DoesNotExist:
+                raise serializers.ValidationError("Invalid organization provided in the URL.")
+
+        # Perform organization validation for each user
+        for user in value:
+            # Assuming the Organization model has a 'users' field
+            if user not in project_organization.users.all():
+                raise serializers.ValidationError(
+                    f"User {user.username} does not belong to the project's organization."
+                )
+
+        return value

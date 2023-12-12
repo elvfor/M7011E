@@ -21,3 +21,16 @@ class ProjectSerializer(serializers.HyperlinkedModelSerializer):
         model = Project
         fields = ('organization_slug', 'organization', 'id', 'name', 'users', 'slug')
         read_only_fields = ['organization', 'organization_slug', ]
+
+    def validate_users(self, value):
+        """
+        Validate that users belong to the same organization as the project.
+        """
+        if self.instance is not None:
+            project_organization = self.instance.organization
+            for user in value:
+                if user.organization != project_organization:
+                    raise serializers.ValidationError(
+                        f"User {user.username} does not belong to the project's organization."
+                    )
+        return value

@@ -2,6 +2,7 @@ from django.contrib.auth.models import User, Group
 from rest_framework import status
 from rest_framework.test import APITestCase, APIClient
 from .models import Project
+from django.contrib.auth import get_user_model
 
 
 class ProjectDetailTest(APITestCase):
@@ -10,6 +11,8 @@ class ProjectDetailTest(APITestCase):
     def setUp(self):
         self.client = APIClient()
         # Create users
+        self.superuser = get_user_model().objects.create_superuser(username='superusertest', password='testpass123')
+
         self.user_worker = User.objects.create_user(username='worker',
                                                     password='testpass123')
         self.user_worker2 = User.objects.create_user(username='worker2',
@@ -46,6 +49,14 @@ class ProjectDetailTest(APITestCase):
 
         self.assertEqual(response.data['name'], self.project.name)
 
+    def test_get_proj_detail_superuser(self):
+        """Test superuser can get proj-detail"""
+        self.client.force_authenticate(user=self.superuser)
+        response = self.client.get(self.url)
+
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+
+        self.assertEqual(response.data['name'], self.project.name)
     def test_get_proj_detail_worker_not_in_proj(self):
         """Test worker not in proj can not get proj-detail"""
         self.client.force_authenticate(user=self.user_worker2)
@@ -85,6 +96,16 @@ class ProjectDetailTest(APITestCase):
         self.assertEqual(response.status_code, status.HTTP_200_OK)
         self.assertEqual(self.project.name, 'Updated Project')
 
+    def test_update_proj_superuser(self):
+        """Test superuser can update project it is in."""
+        self.client.force_authenticate(user=self.superuser)
+        payload = {'name': 'Updated Project'}
+        response = self.client.patch(self.url, payload)
+
+        self.project.refresh_from_db()
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+        self.assertEqual(self.project.name, 'Updated Project')
+
     def test_delete_proj_as_proj_leader(self):
         """Test can deleta a project as a proj leader."""
         self.client.force_authenticate(user=self.user_proj_leader)
@@ -92,6 +113,15 @@ class ProjectDetailTest(APITestCase):
 
         self.assertEqual(response.status_code, status.HTTP_204_NO_CONTENT)
         self.assertEqual(Project.objects.count(), 0)
+
+    def test_delete_proj_as_superuser(self):
+        """Test can deleta a project as a superuser."""
+        self.client.force_authenticate(user=self.superuser)
+        response = self.client.delete(self.url)
+
+        self.assertEqual(response.status_code, status.HTTP_204_NO_CONTENT)
+        self.assertEqual(Project.objects.count(), 0)
+
 
     def test_update_proj_worker(self):
         """Test Worker can not update project it is in."""

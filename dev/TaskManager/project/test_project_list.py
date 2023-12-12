@@ -1,4 +1,5 @@
 from django.contrib.auth.models import User, Group
+from django.contrib.auth import get_user_model
 from rest_framework import status
 from rest_framework.test import APITestCase, APIClient
 from .models import Project
@@ -12,9 +13,13 @@ class ProjectListTest(APITestCase):
         self.client = APIClient()
 
         # create users
+        self.superuser = get_user_model().objects.create_superuser(username='superusertest', password='testpass123')
+
         self.user_worker = User.objects.create_user(username='worker',
                                                     password='testpass123')
         self.user_worker2 = User.objects.create_user(username='worker2',
+                                                     password='testpass123')
+        self.user_worker3 = User.objects.create_user(username='worker3',
                                                      password='testpass123')
         self.user_proj_leader = User.objects.create_user(username='proj_leader',
                                                          password='testpass123')
@@ -43,6 +48,7 @@ class ProjectListTest(APITestCase):
         self.org_leader_group = Group.objects.create(name='Organization Leader')
         self.user_worker.groups.add(self.worker_group)
         self.user_worker2.groups.add(self.worker_group)
+        self.user_worker3.groups.add(self.worker_group)
         self.user_proj_leader.groups.add(self.proj_leader_group)
         self.user_org_leader.groups.add(self.org_leader_group)
 
@@ -51,6 +57,14 @@ class ProjectListTest(APITestCase):
     def test_get_project_list_worker_in_org(self):
         """Test worker in org can get projects list"""
         self.client.force_authenticate(user=self.user_worker)
+        response = self.client.get(self.url)
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+
+        self.assertEqual(len(response.data), 2)
+
+    def test_get_project_list_superuser(self):
+        """Test superuser can get projects list"""
+        self.client.force_authenticate(user=self.superuser)
         response = self.client.get(self.url)
         self.assertEqual(response.status_code, status.HTTP_200_OK)
 
@@ -102,6 +116,34 @@ class ProjectListTest(APITestCase):
         self.assertEqual(response.status_code, status.HTTP_201_CREATED)
         self.assertEqual(Project.objects.filter(name='New Project22').count(), 1)
         self.assertEqual(Project.objects.filter(name='New Project22').first().name, 'New Project22')
+
+    def test_post_project_superuser(self):
+        """Test superuser can create a new Project."""
+        self.client.force_authenticate(user=self.superuser)
+
+        payload = {
+            'name': 'New Project22',
+            'users': self.user_proj_leader.id,
+            'slug': 'slugNewProject22',
+        }
+        response = self.client.post(self.url, payload)
+
+        self.assertEqual(response.status_code, status.HTTP_201_CREATED)
+        self.assertEqual(Project.objects.filter(name='New Project22').count(), 1)
+        self.assertEqual(Project.objects.filter(name='New Project22').first().name, 'New Project22')
+
+    def test_post_project_add_users_not_in_same_org(self):
+        """Test can not create a new Project and add users who are not part of the same Organization."""
+        self.client.force_authenticate(user=self.superuser)
+
+        payload = {
+            'name': 'New Project22',
+            'users': self.user_worker3,
+            'slug': 'slugNewProject22',
+        }
+        response = self.client.post(self.url, payload)
+
+        self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST)
 
     def test_post_project_org_leader(self):
         """Test Organization leader can not create a new Project."""

@@ -80,6 +80,20 @@ class OrganizationDetailTest(APITestCase):
         self.assertEqual(self.organization.slug, payload['slug'])
         self.assertEqual(response.status_code, status.HTTP_200_OK)
 
+    def test_update_organization(self):
+        """Test updating the organization for authenticated superuser"""
+        self.client.force_authenticate(user=self.user_org_leader)
+
+        payload = {'name': 'Test Organization 4',
+                   'slug': 'test-org-4'}
+
+        response = self.client.patch(self.url, payload)
+
+        self.organization.refresh_from_db()
+        self.assertEqual(self.organization.name, payload['name'])
+        self.assertEqual(self.organization.slug, payload['slug'])
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+
     def test_delete_organization(self):
         """Test deleting the organization for authenticated organization leader"""
         self.client.force_authenticate(user=self.user_org_leader)

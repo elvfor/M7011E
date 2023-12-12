@@ -57,6 +57,7 @@ class OrganizationListTest(APITestCase):
         payload = {
             'name': 'Newer Organization',
             'slug': 'newer-organization',
+            'users': self.user_org_leader.id
         }
 
         self.assertEqual(Organization.objects.filter(name='Newer Organization').count(), 0)

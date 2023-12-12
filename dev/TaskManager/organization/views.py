@@ -40,7 +40,7 @@ class OrganizationList(generics.ListCreateAPIView):
 
 class OrganizationDetail(generics.RetrieveUpdateDestroyAPIView):
     authentication_classes = [authentication.TokenAuthentication]
-    permission_classes = [permissions.IsAuthenticated, IsOrgLeader, IsPartOfOrg]
+    permission_classes = [permissions.IsAuthenticated, (IsOrgLeader | IsAdminUser), (IsPartOfOrg | IsAdminUser)]
 
     serializer_class = OrganizationSerializer
     lookup_field = 'slug'

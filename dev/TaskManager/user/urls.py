@@ -7,4 +7,5 @@ urlpatterns = [
     path('user/create/', CreateUserView.as_view(), name='create'),
     path('user/token/', CreateTokenView.as_view(), name='token'),
     path('user/update/', ManageUserView.as_view(), name='update'),
+    path('user/profile/', ProfileDetailView.as_view(), name='profile-detail'),
 ]

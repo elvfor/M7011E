@@ -1,4 +1,5 @@
 from django.contrib.auth.models import User, Group
+from .models import Profile
 from django.contrib.auth import (
     get_user_model,
     authenticate,
@@ -6,6 +7,7 @@ from django.contrib.auth import (
 from django.utils.translation import gettext as _
 from rest_framework import serializers
 from django.urls import reverse
+
 
 class UserSerializer(serializers.ModelSerializer):
     """Serializer for the user object."""
@@ -56,7 +58,7 @@ class AuthTokenSerializer(serializers.Serializer):
         return attrs
 
 
-#class GroupSerializer(serializers.HyperlinkedModelSerializer):
-#    class Meta:
-#        model = Group
-#        fields = ['url', 'name']
+class ProfileSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Profile
+        fields = '__all__'

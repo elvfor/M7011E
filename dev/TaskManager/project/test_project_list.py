@@ -138,7 +138,7 @@ class ProjectListTest(APITestCase):
 
         payload = {
             'name': 'New Project22',
-            'users': self.user_worker3,
+            'users': self.user_worker3.id,
             'slug': 'slugNewProject22',
         }
         response = self.client.post(self.url, payload)

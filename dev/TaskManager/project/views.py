@@ -81,8 +81,10 @@ class ProjectList(generics.ListCreateAPIView):
             return Project.objects.filter(users=self.request.user, organization=organization)
 
     def perform_create(self, serializer):
+        serializer.is_valid(raise_exception=True)
         organization = Organization.objects.get(slug=self.kwargs['slug'])
         serializer.save(organization=organization)
+
 
 
 class ProjectDetail(generics.RetrieveUpdateDestroyAPIView):

@@ -20,7 +20,7 @@ class ProjectListTest(APITestCase):
                                                          password='testpass123')
         self.user_org_leader = User.objects.create_user(username='org_leader',
                                                         password='testpass123')
-        # create orgs + projs
+
         self.organization = Organization.objects.create(name='Test Organization',
                                                         slug='test-org')
         self.project = Project.objects.create(name='Test Project',

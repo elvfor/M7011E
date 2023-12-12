@@ -9,24 +9,24 @@ class ProjectDetailTest(APITestCase):
 
     def setUp(self):
         self.client = APIClient()
-        #Create users
+        # Create users
         self.user_worker = User.objects.create_user(username='worker',
                                                     password='testpass123')
         self.user_worker2 = User.objects.create_user(username='worker2',
-                                                    password='testpass123')
+                                                     password='testpass123')
         self.user_proj_leader = User.objects.create_user(username='proj_leader',
-                                                    password='testpass123')
-        self.user_org_leader = User.objects.create_user(username='org_leader',
                                                          password='testpass123')
-        #create test Project
+        self.user_org_leader = User.objects.create_user(username='org_leader',
+                                                        password='testpass123')
+        # create test Project
         self.project = Project.objects.create(name='Test Project',
                                               slug='test-project',
                                               )
-        #add some users to project
+        # add some users to project
         self.project.users.add(self.user_worker)
         self.project.users.add(self.user_proj_leader)
 
-        #create Groups and add users to said groups
+        # create Groups and add users to said groups
         self.worker_group = Group.objects.create(name='Worker')
         self.proj_leader_group = Group.objects.create(name='Project Leader')
         self.org_leader_group = Group.objects.create(name='Organization Leader')
@@ -60,12 +60,14 @@ class ProjectDetailTest(APITestCase):
 
         self.assertEqual(response.status_code, status.HTTP_200_OK)
         self.assertEqual(response.data['name'], self.project.name)
+
     def test_get_proj_detail_not_authenticated(self):
         """Test proj-leader in proj can get proj-detail"""
         self.client.force_authenticate(user=None)
         response = self.client.get(self.url)
 
         self.assertEqual(response.status_code, status.HTTP_401_UNAUTHORIZED)
+
     def test_get_proj_detail_org_leader(self):
         """Test org-leader can not get proj-detail"""
         self.client.force_authenticate(user=self.user_org_leader)
@@ -90,6 +92,7 @@ class ProjectDetailTest(APITestCase):
 
         self.assertEqual(response.status_code, status.HTTP_204_NO_CONTENT)
         self.assertEqual(Project.objects.count(), 0)
+
     def test_update_proj_worker(self):
         """Test Worker can not update project it is in."""
         self.client.force_authenticate(user=self.user_worker)

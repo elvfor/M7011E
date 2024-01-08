@@ -34,8 +34,7 @@ class OrganizationList(generics.ListCreateAPIView):
     permission_classes = [permissions.IsAuthenticated, IsAdminUser]
 
     def get_queryset(self):
-        user = self.request.user
-        return Organization.objects.filter(users=user)
+        return Organization.objects
 
 
 class OrganizationDetail(generics.RetrieveUpdateDestroyAPIView):
@@ -44,8 +43,8 @@ class OrganizationDetail(generics.RetrieveUpdateDestroyAPIView):
 
     serializer_class = OrganizationSerializer
     lookup_field = 'slug'
+    queryset = Organization.objects.all()
 
-    def get_queryset(self):
-        user = self.request.user
-
-        return Organization.objects.filter(users=user)
+    #def get_queryset(self):
+    #    organization_slug = self.kwargs['slug']
+    #    return Organization.objects.filter(slug=organization_slug)

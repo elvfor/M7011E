@@ -1,3 +1,4 @@
+from django.contrib.auth import get_user_model
 from django.test import TestCase
 
 # Create your tests here.
@@ -8,7 +9,7 @@ from rest_framework.test import APITestCase, APIClient
 from .models import Task
 from project.models import Project
 from organization.models import Organization
-
+from rest_framework.permissions import IsAdminUser
 
 class TaskListTest(APITestCase):
     """Tests for TaskList view."""
@@ -17,6 +18,7 @@ class TaskListTest(APITestCase):
         self.client_worker = APIClient()
 
         # Create users
+        self.superuser = get_user_model().objects.create_superuser(username='superusertest', password='testpass123')
         self.user_worker = User.objects.create_user(username='worker', password='testpass123')
         self.user_worker2 = User.objects.create_user(username='worker2', password='testpass123')
         self.user_proj_leader = User.objects.create_user(username='proj_leader', password='testpass123')
@@ -37,8 +39,6 @@ class TaskListTest(APITestCase):
             name='Test Org 2',
             slug='test-org-2')
 
-        self.org.users.add(self.user_worker, self.user_proj_leader)
-
         # Create a project associated with the organization
         self.proj = Project.objects.create(
             name='Test Proj 2',
@@ -46,7 +46,8 @@ class TaskListTest(APITestCase):
             slug='test-proj-2')
 
         # Adding users to the project
-        self.proj.users.add(self.user_worker, self.user_proj_leader)
+        self.proj.users.add(self.user_worker)
+        self.proj.users.add(self.user_proj_leader)
 
         # Create a task associated with the project
         self.task = Task.objects.create(
@@ -62,7 +63,7 @@ class TaskListTest(APITestCase):
         self.task.users.set([self.user_worker, self.user_proj_leader])
 
         # Set the task URL
-        # self.url = f'/api/v1/projects/{self.task.slug}/tasks/'
+        #self.url = f'/api/v1/projects/{self.task.slug}/tasks/'
         # Set the project URL
         self.url = f'/api/v1/projects/{self.proj.slug}/tasks/'
 
@@ -83,7 +84,13 @@ class TaskListTest(APITestCase):
         self.client.force_authenticate(user=self.user_proj_leader)
         response = self.client.get(self.url)
         self.assertEqual(response.status_code, status.HTTP_200_OK)
-        # self.assertEqual(response.data['name'], self.task.name)
+        #self.assertEqual(response.data['name'], self.task.name)
+
+    def test_get_task_list_superUser(self):
+        """Test super user can get task-list"""
+        self.client.force_authenticate(user=self.superuser)
+        response = self.client.get(self.url)
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
 
     def test_get_task_list_org_leader(self):
         """Test org-leader can not get task-list"""
@@ -106,19 +113,16 @@ class TaskListTest(APITestCase):
             'description': 'A new task',
             'status': 'Backlog',
             'estimated_time': '5',
-            'project': self.proj.slug,
+            #'project': self.proj.id,
             'label': 'bug',
-            'users': [self.user_worker.id],
-            'slug': 'test-task-2'
+            'users': self.user_worker.id,
+            'slug': 'test-task-2222222',
         }
         response = self.client.post(self.url, payload)
 
-        # Print response content for debugging
-        print(response.content)
-
         self.assertEqual(response.status_code, status.HTTP_201_CREATED)
-        self.assertEqual(Project.objects.filter(name='New Task').count(), 1)
-        self.assertEqual(Project.objects.filter(name='New Task').first().name, 'New Task')
+        self.assertEqual(Task.objects.filter(name='New Task').count(), 1)
+        self.assertEqual(Task.objects.filter(name='New Task').first().name, 'New Task')
 
     def test_post_proj_leader(self):
         """Test Project leader can create a new Task."""
@@ -129,16 +133,54 @@ class TaskListTest(APITestCase):
             'description': 'A new task',
             'status': 'Backlog',
             'estimated_time': '5',
-            'project': self.proj.slug,
+            #'project': self.proj.id,
             'label': 'bug',
-            'users': [self.user_proj_leader.id],
-            'slug': 'test-proj-2'
+            'users': self.user_proj_leader.id,
+            'slug': 'test-task'
         }
         response = self.client.post(self.url, payload)
 
         self.assertEqual(response.status_code, status.HTTP_201_CREATED)
-        self.assertEqual(Project.objects.filter(name='New Task').count(), 1)
-        self.assertEqual(Project.objects.filter(name='New Task').first().name, 'New Task')
+        self.assertEqual(Task.objects.filter(name='New Task').count(), 1)
+        self.assertEqual(Task.objects.filter(name='New Task').first().name, 'New Task')
+
+    def test_post_superUser(self):
+        """Test super user can create a new Task."""
+        self.client.force_authenticate(user=self.superuser)
+
+        payload = {
+            'name': 'New Task',
+            'description': 'A new task',
+            'status': 'Backlog',
+            'estimated_time': '5',
+            #'project': self.proj.id,
+            'label': 'bug',
+            'users': self.user_proj_leader.id,
+            'slug': 'test-task11'
+        }
+        response = self.client.post(self.url, payload)
+
+        self.assertEqual(response.status_code, status.HTTP_201_CREATED)
+        self.assertEqual(Task.objects.filter(name='New Task').count(), 1)
+        self.assertEqual(Task.objects.filter(name='New Task').first().name, 'New Task')
+
+    def test_post_worker_not_in_proj(self):
+        """Test can not create a new Task and assign users who are not in Project."""
+        self.client.force_authenticate(user=self.user_proj_leader)
+
+        payload = {
+            'name': 'New Task',
+            'description': 'A new task',
+            'status': 'Backlog',
+            'estimated_time': '5',
+            #'project': self.proj.id,
+            'label': 'bug',
+            'users': self.user_worker2.id,
+            'slug': 'test-task33333333'
+        }
+        response = self.client.post(self.url, payload)
+
+        self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST)
 
     def test_post_org_leader(self):
         """Test Org leader can not create a new Task."""
@@ -149,12 +191,12 @@ class TaskListTest(APITestCase):
             'description': 'A new task',
             'status': 'Backlog',
             'estimated_time': '5',
-            # 'project': self.proj.slug,
+            #'project': self.proj.id,
             'label': 'bug',
-            'users': [self.user_org_leader.id],
+            'users': self.user_org_leader.id,
             'slug': 'slugNewTask'
         }
-        response = self.client.post(self.url, payload)
 
         response = self.client.post(self.url, payload)
         self.assertEqual(response.status_code, status.HTTP_403_FORBIDDEN)
+

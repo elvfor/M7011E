@@ -14,6 +14,7 @@ Our chosen project for the course is a Task Manager.
 - Clone the git repo. 
 
 - Set up a SQLite database and use following commands:
+  
 run python manage.py migrate
 run python manage.py makemigrations
 

@@ -47,6 +47,7 @@ Worker
 - ## Running the code
 
 Stand in M7011E/dev/TaskManager and run command:
+
 python manage.py runserver
 
 

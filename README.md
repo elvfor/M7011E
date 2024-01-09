@@ -9,9 +9,11 @@ ejyuso-2@student.ltu.se elvfor-0@student.ltu.se pegkhi-0@student.ltu.se
 Our chosen project for the course is a Task Manager.
 
 
-## Running the code
+## Preparations
 
-- Clone the git repo. 
+- Clone the git repo.
+
+- Set up a virtual environment 
 
 - Set up a SQLite database and use following commands:
   
@@ -41,6 +43,12 @@ Project leader
 
 Worker
 - Can view, add, change and delete tasks
+
+- ## Running the code
+
+Stand in M7011E/dev/TaskManager and run command:
+python manage.py runserver
+
 
 
 

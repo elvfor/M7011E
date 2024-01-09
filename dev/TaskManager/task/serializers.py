@@ -1,7 +1,6 @@
 from django.contrib.auth.models import User, Group
 from .models import Task
 from rest_framework import serializers
-
 from project.models import Project
 
 
@@ -34,11 +33,9 @@ class TaskSerializer(serializers.HyperlinkedModelSerializer):
         instance = self.instance
         task_project = None
 
-        # Check if there is an existing instance (update scenario)
         if instance is not None:
             task_project = instance.project
 
-        # If project is provided in the URL, use it for validation
         elif 'slug' in self.context['view'].kwargs:
             project_slug = self.context['view'].kwargs['slug']
             try:
@@ -46,9 +43,7 @@ class TaskSerializer(serializers.HyperlinkedModelSerializer):
             except Project.DoesNotExist:
                 raise serializers.ValidationError("Invalid Project provided in the URL.")
 
-        # Perform project validation for each user
         for user in value:
-            # Assuming the Organization model has a 'users' field
             if user not in task_project.users.all():
                 raise serializers.ValidationError(
                     f"User {user.username} is not part of the Project Task is in."

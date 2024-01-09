@@ -45,6 +45,3 @@ class OrganizationDetail(generics.RetrieveUpdateDestroyAPIView):
     lookup_field = 'slug'
     queryset = Organization.objects.all()
 
-    #def get_queryset(self):
-    #    organization_slug = self.kwargs['slug']
-    #    return Organization.objects.filter(slug=organization_slug)

@@ -1,15 +1,10 @@
 from django.contrib.auth import get_user_model
-from django.test import TestCase
-
-# Create your tests here.
-
 from django.contrib.auth.models import User, Group
 from rest_framework import status
 from rest_framework.test import APITestCase, APIClient
 from .models import Task
 from project.models import Project
 from organization.models import Organization
-from rest_framework.permissions import IsAdminUser
 
 class TaskListTest(APITestCase):
     """Tests for TaskList view."""

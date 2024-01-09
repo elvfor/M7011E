@@ -31,11 +31,9 @@ class ProjectSerializer(serializers.HyperlinkedModelSerializer):
         instance = self.instance
         project_organization = None
 
-        # Check if there is an existing instance (update scenario)
         if instance is not None:
             project_organization = instance.organization
 
-        # If organization is provided in the URL, use it for validation
         elif 'slug' in self.context['view'].kwargs:
             organization_slug = self.context['view'].kwargs['slug']
             try:
@@ -45,7 +43,6 @@ class ProjectSerializer(serializers.HyperlinkedModelSerializer):
 
         # Perform organization validation for each user
         for user in value:
-            # Assuming the Organization model has a 'users' field
             if user not in project_organization.users.all():
                 raise serializers.ValidationError(
                     f"User {user.username} does not belong to the project's organization."

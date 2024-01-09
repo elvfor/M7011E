@@ -1,7 +1,4 @@
 from django.db import models
-
-# Create your models here.
-from django.db import models
 from project.models import Project
 from django.contrib.auth.models import User
 
@@ -34,10 +31,7 @@ class Task(models.Model):
     users = models.ManyToManyField(User)
     slug = models.SlugField(null=True, unique=True)
 
-    #def save(self, args, **kwargs):
-    #    if not self.slug or self.name != self.slug:
-    #        self.slug = slugify(self.name)
-    #    super().save(args, **kwargs)
 
     def __str__(self):
         return self.name
+

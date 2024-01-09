@@ -5,7 +5,6 @@ from django.contrib.auth import (
 )
 from django.utils.translation import gettext as _
 from rest_framework import serializers
-from django.urls import reverse
 
 class UserSerializer(serializers.ModelSerializer):
     """Serializer for the user object."""
@@ -55,8 +54,3 @@ class AuthTokenSerializer(serializers.Serializer):
         attrs['user'] = user
         return attrs
 
-
-#class GroupSerializer(serializers.HyperlinkedModelSerializer):
-#    class Meta:
-#        model = Group
-#        fields = ['url', 'name']

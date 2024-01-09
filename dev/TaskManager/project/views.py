@@ -65,9 +65,6 @@ class ProjectList(generics.ListCreateAPIView):
     permission_classes = [permissions.IsAuthenticated, (IsOrgLeader | IsWorker | IsProjLeader | IsAdminUser),
                           (IsPartOfOrg | IsAdminUser), (SafePermissions | IsAdminUser)]
 
-    # def get_queryset(self):
-    #    organization = Organization.objects.get(slug=self.kwargs['slug'])
-    #    return Project.objects.filter(organization=organization)
     def get_queryset(self):
         organization = Organization.objects.get(slug=self.kwargs['slug'])
 

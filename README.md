@@ -16,7 +16,9 @@ Our chosen project for the course is a Task Manager.
 - Set up a SQLite database and use following commands:
   
 run python manage.py migrate
+
 run python manage.py makemigrations
+
 
 - Install the requirements listed in the requirements.txt file with command:
 run pip install -r requirements.txt

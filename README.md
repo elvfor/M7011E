@@ -35,17 +35,17 @@ run python manage.py createsuperuser
 
 When you can access the admin page the following groups and permissions needs to be created in order for the system to work as intended:
 
-Organization Leader:
+#### Organization Leader:
 - Can change and view organization
 - Can add and delete projects
 
 
-Project leader
+#### Project leader
 - Can view, add, change and delete projects
 - Can view, add, change and delete tasks
 
 
-Worker
+#### Worker
 - Can view, add, change and delete tasks
 
 - ## Running the code

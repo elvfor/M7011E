@@ -5,7 +5,9 @@ This is for a project in course M7011E.
 **Jenny Sundström, Elvira Forslund Widenroth and Peggy Khialie**
 
 ejyuso-2@student.ltu.se 
+
 elvfor-0@student.ltu.se 
+
 pegkhi-0@student.ltu.se
 
 Our chosen project for the course is a Task Manager.

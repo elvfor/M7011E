@@ -4,14 +4,20 @@ This is for a project in course M7011E.
 ### Authors
 **Jenny Sundström, Elvira Forslund Widenroth and Peggy Khialie**
 
-ejyuso-2@student.ltu.se elvfor-0@student.ltu.se pegkhi-0@student.ltu.se
+ejyuso-2@student.ltu.se 
+
+elvfor-0@student.ltu.se 
+
+pegkhi-0@student.ltu.se
 
 Our chosen project for the course is a Task Manager.
 
 
-## Running the code
+## Preparations
 
-- Clone the git repo. 
+- Clone the git repo.
+
+- Set up a virtual environment 
 
 - Set up a SQLite database and use following commands:
   
@@ -29,18 +35,25 @@ run python manage.py createsuperuser
 
 When you can access the admin page the following groups and permissions needs to be created in order for the system to work as intended:
 
-Organization Leader:
+#### Organization Leader:
 - Can change and view organization
 - Can add and delete projects
 
 
-Project leader
+#### Project leader
 - Can view, add, change and delete projects
 - Can view, add, change and delete tasks
 
 
-Worker
+#### Worker
 - Can view, add, change and delete tasks
+
+- ## Running the code
+
+Stand in M7011E/dev/TaskManager and run command:
+
+python manage.py runserver
+
 
 
 

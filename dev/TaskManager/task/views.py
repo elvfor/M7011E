@@ -28,7 +28,7 @@ class IsUserInProj_project(permissions.BasePermission):
         project_slug = view.kwargs['slug']
         try:
             project = Project.objects.get(slug=project_slug)
-        except Project.NotExist:
+        except Project.DoesNotExist:
             raise Http404
 
         return request.user in project.users.all()

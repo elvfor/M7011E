@@ -54,6 +54,9 @@ Stand in M7011E/dev/TaskManager and run command:
 
 python manage.py runserver
 
+## Evaluation of performance
+See dev/TaskManaggger/main/performance_documentation.MD for documentation of the performance + more. 
+
 
 
 

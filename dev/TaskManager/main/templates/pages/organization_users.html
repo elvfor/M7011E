@@ -1,0 +1,19 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Organization Users</title>
+</head>
+<body>
+    <h1>Organizations and User Counts</h1>
+    <ul>
+        {% for organization in organizations %}
+            <li>
+                <strong>Organization Name:</strong> {{ organization.name }}
+                <h2>User Count:</h2>
+                <p><strong>Total Users:</strong> {{ organization.users.count }}</p>
+            </li>
+        {% endfor %}
+    </ul>
+</body>
+</html>
